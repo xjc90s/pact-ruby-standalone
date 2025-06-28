@@ -13,7 +13,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: ruby/setup-ruby@v1.194.0
+    - uses: ruby/setup-ruby@v1.245.0
       with:
         ruby-version: 3.3.5
 
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Notify ${{ matrix.repository }} of gem release
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.GHTOKENFORRELEASEDISPATCH }}
           repository: ${{ matrix.repository }}
