@@ -9,9 +9,9 @@ Creates a standalone pact command line executable containing
 
 ## Package contents
 
-This version (2.5.2) of the Pact standalone executables package contains:
+This version (2.5.3) of the Pact standalone executables package contains:
 
-  * pact gem 1.66.1
+  * pact gem 1.66.2
   * pact-mock_service gem 3.12.3
   * pact-support gem 1.21.2
   * pact-provider-verifier gem 1.39.1
@@ -438,13 +438,3 @@ Commands:
 ### SSL
 
 To connect to a Pact Broker that uses custom SSL certificates, set the environment variable `$SSL_CERT_FILE` or `$SSL_CERT_DIR` to a path that contains the appropriate certificate.
-
-### error while loading shared libraries: libcrypt.so.1: cannot open shared object file: No such file or directory
-
-This error occurs because the bundled Ruby, on Linux, is built against `libcrypt.so.1`, and you're on a distro that has moved to `libcrypt.so.2`.
-
-To fix, install the `libxcrypt-compact` that corresponds with your distro:
-
-- **CentOS** / **RHEL** / **Fedora** - `sudo dnf install libxcrypt-compat`
-- **Arch Linux** - `sudo pacman -S libxcrypt-compat`
-- Others - search your package manager for a package that provides `libcrypt.so.1`
