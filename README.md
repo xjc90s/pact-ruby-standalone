@@ -9,9 +9,9 @@ Creates a standalone pact command line executable containing
 
 ## Package contents
 
-This version (2.5.4) of the Pact standalone executables package contains:
+This version (2.5.5) of the Pact standalone executables package contains:
 
-  * pact gem 1.67.1
+  * pact gem 1.67.2
   * pact-mock_service gem 3.12.3
   * pact-support gem 1.21.2
   * pact-provider-verifier gem 1.39.1
