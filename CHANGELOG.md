@@ -1,3 +1,12 @@
+<a name="v2.5.6"></a>
+### v2.5.6 (2025-10-25)
+
+
+#### Bug Fixes
+
+* remove libs from extensions, fix release note new line	 ([c3b524c](/../../commit/c3b524c))
+
+
 <a name="v2.5.5"></a>
 ### v2.5.5 (2025-10-22)
 
