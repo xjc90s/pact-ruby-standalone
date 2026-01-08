@@ -9,10 +9,10 @@ Creates a standalone pact command line executable containing
 
 ## Package contents
 
-This version (2.5.7) of the Pact standalone executables package contains:
+This version (2.5.8) of the Pact standalone executables package contains:
 
   * pact gem 1.67.3
-  * pact-mock_service gem 3.12.3
+  * pact-mock_service gem 3.12.4
   * pact-support gem 1.21.2
   * pact-provider-verifier gem 1.39.1
   * pact_broker-client gem 1.77.0
@@ -94,6 +94,7 @@ Commands:
   pact-mock-service service               # Start a mock service. If the cons...
   pact-mock-service start                 # Start a mock service. If the cons...
   pact-mock-service stop -p, --port=PORT  # Stop a Pact mock service
+  pact-mock-service tree                  # Print a tree of all available commands
   pact-mock-service version               # Show the pact-mock-service gem version
 
 Usage:
@@ -427,6 +428,7 @@ Generate Pact documentation in markdown
 Commands:
   pact-message help [COMMAND]                                                ...
   pact-message reify                                                         ...
+  pact-message tree                                                          ...
   pact-message update MESSAGE_JSON --consumer=CONSUMER --pact-dir=PACT_DIR --...
   pact-message version                                                       ...
 

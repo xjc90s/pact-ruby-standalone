@@ -1,3 +1,13 @@
+<a name="v2.5.8"></a>
+### v2.5.8 (2026-01-08)
+
+
+#### Features
+
+* **gems**
+  * update to pact-mock_service (3.12.4)	 ([11f2ccd](/../../commit/11f2ccd))
+
+
 <a name="v2.5.7"></a>
 ### v2.5.7 (2025-11-06)
 
