@@ -1,3 +1,12 @@
+<a name="v2.5.9"></a>
+### v2.5.9 (2026-01-09)
+
+
+#### Bug Fixes
+
+* revert io-console to 0.7.1 to match std gem set for 3.3.9	 ([dc17596](/../../commit/dc17596))
+
+
 <a name="v2.5.8"></a>
 ### v2.5.8 (2026-01-08)
 
