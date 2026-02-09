@@ -1,3 +1,13 @@
+<a name="v2.5.10"></a>
+### v2.5.10 (2026-02-09)
+
+
+#### Features
+
+* **gems**
+  * update non-pact gems	 ([4ac5f28](/../../commit/4ac5f28))
+
+
 <a name="v2.5.9"></a>
 ### v2.5.9 (2026-01-09)
 
