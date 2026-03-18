@@ -69,7 +69,7 @@ jobs:
     needs: release
     strategy:
       matrix:
-        repository: [pact-foundation/homebrew-pact-standalone]
+        repository: [pact-foundation/homebrew-tap]
     runs-on: ubuntu-latest
     steps:
       - name: Notify ${{ matrix.repository }} of gem release
