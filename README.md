@@ -1,6 +1,7 @@
 # Pact Standalone
 
-![Build](https://github.com/pact-foundation/pact-standalone/workflows/Build/badge.svg)
+> [!WARNING]  
+> This project is deprecated. We recommend updating to the latest CLI https://docs.pact.io/implementation_guides/cli
 
 Creates a standalone pact command line executable containing
 
