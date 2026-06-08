@@ -1,3 +1,16 @@
+<a name="v2.6.1"></a>
+### v2.6.1 (2026-06-08)
+
+
+#### Bug Fixes
+
+* **ci**
+  * update Ruby version to 3.4.7 in release and update workflows (#237)	 ([7228c6f](/../../commit/7228c6f))
+
+* **security**
+  * upgrade Traveling Ruby to 3.4.7 to remediate zlib and uri CVEs (#236)	 ([f656da0](/../../commit/f656da0))
+
+
 <a name="v2.5.12"></a>
 ### v2.5.12 (2026-02-23)
 

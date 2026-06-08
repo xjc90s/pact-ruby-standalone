@@ -1,7 +1,6 @@
 # Pact Standalone
 
-> [!WARNING]  
-> This project is deprecated. We recommend updating to the latest CLI https://docs.pact.io/implementation_guides/cli
+![Build](https://github.com/pact-foundation/pact-standalone/workflows/Build/badge.svg)
 
 Creates a standalone pact command line executable containing
 
@@ -9,7 +8,7 @@ Creates a standalone pact command line executable containing
 
 ## Package contents
 
-This version (2.6.0) of the Pact standalone executables package contains:
+This version (2.6.1) of the Pact standalone executables package contains:
 
   * pact gem 1.67.5
   * pact-mock_service gem 3.12.4
