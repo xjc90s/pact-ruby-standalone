@@ -3,19 +3,20 @@ require 'bundler/setup'
 
 PACKAGE_NAME = "pact"
 VERSION = File.read('VERSION').strip
-TRAVELING_RUBY_VERSION = "20250625-3.3.9"
+TRAVELING_RUBY_VERSION = "20251122-3.4.7"
 TRAVELING_RUBY_PKG_DATE = TRAVELING_RUBY_VERSION.split("-").first
 TRAVELING_RB_VERSION = TRAVELING_RUBY_VERSION.split("-").last
 RUBY_COMPAT_VERSION = TRAVELING_RB_VERSION.split(".").first(2).join(".") + ".0"
 RUBY_MAJOR_VERSION = TRAVELING_RB_VERSION.split(".").first.to_i
 RUBY_MINOR_VERSION = TRAVELING_RB_VERSION.split(".")[1].to_i
+BUNDLER_VERSION = "2.7.2"
 PLUGIN_CLI_VERSION = "0.1.3" # https://github.com/pact-foundation/pact-plugins/releases
 MOCK_SERVER_CLI_VERSION = "1.0.6" # https://github.com/pact-foundation/pact-core-mock-server/releases
 VERIFIER_CLI_VERSION = "1.2.0" # https://github.com/pact-foundation/pact-reference/releases
 STUB_SERVER_CLI_VERSION = "0.6.2" # https://github.com/pact-foundation/pact-stub-server/releases
 
-desc "Package pact-standalone for OSX, Linux x86_64 and windows x86_64"
-task :package => ['package:linux:x86_64','package:linux:arm64', 'package:osx:x86_64', 'package:osx:arm64','package:windows:x86_64']
+desc "Package pact-standalone for macOS, Linux x86_64 and windows x86_64"
+task :package => ['package:linux:x86_64','package:linux:arm64', 'package:macos:x86_64', 'package:macos:arm64','package:windows:x86_64']
 
 namespace :package do
   namespace :linux do
@@ -30,15 +31,15 @@ namespace :package do
     end
   end
 
-  namespace :osx do
-  desc "Package pact-standalone for OS X x86_64"
-  task :x86_64 => [:bundle_install, "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-x86_64.tar.gz"] do
-    create_package(TRAVELING_RUBY_VERSION, "osx-x86_64", "osx-x86_64", :unix)
+  namespace :macos do
+  desc "Package pact-standalone for macOS x86_64"
+  task :x86_64 => [:bundle_install, "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-macos-x86_64.tar.gz"] do
+    create_package(TRAVELING_RUBY_VERSION, "macos-x86_64", "macos-x86_64", :unix)
     end
 
-  desc "Package pact-standalone for OS X arm64"
-  task :arm64 => [:bundle_install, "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-arm64.tar.gz"] do
-    create_package(TRAVELING_RUBY_VERSION, "osx-arm64", "osx-arm64", :unix)
+  desc "Package pact-standalone for macOS arm64"
+  task :arm64 => [:bundle_install, "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-macos-arm64.tar.gz"] do
+    create_package(TRAVELING_RUBY_VERSION, "macos-arm64", "macos-arm64", :unix)
     end
   end
   namespace :windows do
@@ -58,7 +59,7 @@ namespace :package do
     sh "mkdir -p build/tmp/lib/pact/mock_service"
     # sh "cp lib/pact/mock_service/version.rb build/tmp/lib/pact/mock_service/version.rb"
     Bundler.with_unbundled_env do
-      sh "cd build/tmp && env bundle lock --add-platform x64-mingw32 && bundle config set --local path '../vendor' && env BUNDLE_DEPLOYMENT=true bundle install"
+      sh "cd build/tmp && env bundle lock --add-platform x64-mingw-ucrt && bundle config set --local path '../vendor' && env BUNDLE_DEPLOYMENT=true bundle install"
       generate_readme
     end
     sh "rm -rf build/tmp"
@@ -83,12 +84,12 @@ file "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-arm64.tar.gz" do
   download_runtime(TRAVELING_RUBY_VERSION, "linux-arm64")
 end
 
-file "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-x86_64.tar.gz" do
-  download_runtime(TRAVELING_RUBY_VERSION, "osx-x86_64")
+file "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-macos-x86_64.tar.gz" do
+  download_runtime(TRAVELING_RUBY_VERSION, "macos-x86_64")
 end
 
-file "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-arm64.tar.gz" do
-  download_runtime(TRAVELING_RUBY_VERSION, "osx-arm64")
+file "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-macos-arm64.tar.gz" do
+  download_runtime(TRAVELING_RUBY_VERSION, "macos-arm64")
 end
 
 file "build/traveling-ruby-#{TRAVELING_RUBY_VERSION}-windows-x86_64.tar.gz" do
@@ -126,10 +127,17 @@ def create_package(version, source_target, package_target, os_type)
   sh "mkdir #{package_dir}/lib/vendor/.bundle"
   sh "cp packaging/bundler-config #{package_dir}/lib/vendor/.bundle/config"
 
-  if package_target.include? 'windows'
-    sh "sed -i.bak '37s/^/#/' #{package_dir}/lib/ruby/lib/ruby/#{RUBY_COMPAT_VERSION}/bundler/stub_specification.rb"
-  else
-    sh "sed -i.bak '41s/^/#/' #{package_dir}/lib/ruby/lib/ruby/site_ruby/#{RUBY_COMPAT_VERSION}/bundler/stub_specification.rb"
+  # Patch all copies of Bundler's stub_specification.rb to prevent gems with
+  # missing native extensions from being ignored (Bundler 2.7.2 raises GemNotFound).
+  # Making ignored? always return false lets Bundler activate the gem and lets Ruby
+  # fall back to the runtime's built-in .so for default gems (json, fiddle, io-console).
+  stub_spec_files = [
+    "#{package_dir}/lib/ruby/lib/ruby/site_ruby/#{RUBY_COMPAT_VERSION}/bundler/stub_specification.rb",
+    "#{package_dir}/lib/ruby/lib/ruby/#{RUBY_COMPAT_VERSION}/bundler/stub_specification.rb",
+    "#{package_dir}/lib/ruby/lib/ruby/gems/#{RUBY_COMPAT_VERSION}/gems/bundler-#{BUNDLER_VERSION}/lib/bundler/stub_specification.rb",
+  ]
+  stub_spec_files.each do |f|
+    sh "sed -i.bak '39s/return false unless @ignored/return false/' #{f}" if File.exist?(f)
   end
   remove_unnecessary_files package_dir
 
@@ -195,8 +203,6 @@ def remove_unnecessary_files package_dir
   sh "find #{package_dir}/lib/vendor/ruby/*/gems -name '*.so' | xargs rm -f"
   sh "find #{package_dir}/lib/vendor/ruby/*/gems -name '*.bundle' | xargs rm -f"
   sh "find #{package_dir}/lib/vendor/ruby/*/extensions -name '*.o' | xargs rm -f"
-  sh "find #{package_dir}/lib/vendor/ruby/*/extensions -name '*.so' | xargs rm -f"
-  sh "find #{package_dir}/lib/vendor/ruby/*/extensions -name '*.bundle' | xargs rm -f"
 
   # Remove Java files. They're only used for JRuby support"
   sh "find #{package_dir}/lib/vendor/ruby -name '*.java' | xargs rm -f"
@@ -214,16 +220,17 @@ def remove_unnecessary_files package_dir
   sh "find #{package_dir}/lib/vendor/ruby -name 'Gemfile.lock' | xargs rm -f"
 
   # Uncommonly used encodings
-  sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/cp949*"
-  sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/euc_*"
-  sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/shift_jis*"
-  sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/koi8_*"
-  sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/emacs*"
-  sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/gb*"
-  sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/big5*"
-  # sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/windows*"
-  # sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/utf_16*"
-  # sh "rm -f #{package_dir}/lib/ruby/lib/ruby/*/*/enc/utf_32*"
+  # Use -rf to handle .dSYM directories present in macOS Ruby 3.4+ builds
+  sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/cp949*"
+  sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/euc_*"
+  sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/shift_jis*"
+  sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/koi8_*"
+  sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/emacs*"
+  sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/gb*"
+  sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/big5*"
+  # sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/windows*"
+  # sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/utf_16*"
+  # sh "rm -rf #{package_dir}/lib/ruby/lib/ruby/*/*/enc/utf_32*"
 end
 
 def generate_readme
