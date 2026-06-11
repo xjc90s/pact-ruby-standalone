@@ -1,3 +1,5 @@
+$stderr.puts "WARN: This CLI is deprecated and no longer receiving updates. We recommend you upgrade to the latest CLI: https://docs.pact.io/implementation_guides/cli" unless ENV['PACT_DISABLE_DEPRECATION_WARNINGS'] == 'true'
+
 require 'pactflow/client/cli/pactflow'
 
 class Thor
