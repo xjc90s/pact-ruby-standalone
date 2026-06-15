@@ -8,7 +8,7 @@ Creates a standalone pact command line executable containing
 
 ## Package contents
 
-This version (2.6.1) of the Pact standalone executables package contains:
+This version (2.6.2) of the Pact standalone executables package contains:
 
   * pact gem 1.67.5
   * pact-mock_service gem 3.12.4

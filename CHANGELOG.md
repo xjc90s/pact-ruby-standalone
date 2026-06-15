@@ -1,3 +1,12 @@
+<a name="v2.6.2"></a>
+### v2.6.2 (2026-06-12)
+
+
+#### Features
+
+* Add runtime deprecation notice	 ([443bb94](/../../commit/443bb94))
+
+
 <a name="v2.6.1"></a>
 ### v2.6.1 (2026-06-08)
 
