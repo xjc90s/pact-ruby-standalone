@@ -8,13 +8,13 @@ Creates a standalone pact command line executable containing
 
 ## Package contents
 
-This version (2.6.2) of the Pact standalone executables package contains:
+This version (2.6.3) of the Pact standalone executables package contains:
 
   * pact gem 1.67.5
   * pact-mock_service gem 3.12.4
   * pact-support gem 1.21.2
   * pact-provider-verifier gem 1.39.1
-  * pact_broker-client gem 1.77.0
+  * pact_broker-client gem 1.78.0
   * pact-message gem 0.11.1
 
 Binaries will be extracted into `pact/bin`:
