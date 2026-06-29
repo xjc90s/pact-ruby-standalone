@@ -1,3 +1,12 @@
+<a name="v2.6.4"></a>
+### v2.6.4 (2026-06-29)
+
+
+#### Bug Fixes
+
+* Remove leftover shared object and bundle files	 ([6eec207](/../../commit/6eec207))
+
+
 <a name="v2.6.2"></a>
 ### v2.6.2 (2026-06-12)
 
